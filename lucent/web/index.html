@@ -31,8 +31,29 @@
 
   <title>lucent</title>
   <link rel="manifest" href="manifest.json">
+
+  <!-- Add explicit HTTPS permission for geolocation -->
+  <meta http-equiv="Content-Security-Policy" content="geolocation 'self'">
 </head>
 <body>
+  <!-- Add a script for geolocation permissions -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('flutter_service_worker.js');
+    }
+    
+    // Explicitly request geolocation permission when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      if (navigator.geolocation) {
+        console.log("Requesting geolocation permission...");
+        navigator.geolocation.getCurrentPosition(function(position) {
+          console.log("Geolocation permission granted");
+        }, function(error) {
+          console.error("Geolocation permission denied:", error);
+        });
+      }
+    });
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
